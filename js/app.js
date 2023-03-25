@@ -66,7 +66,7 @@ Enemy.prototype.checkCollisions = function () {
     ) {
         // Restarts if collision is detected
         (player.x = configuration.player.START_COL),
-        (player.y = configuration.player.START_ROW);
+            (player.y = configuration.player.START_ROW);
     }
 };
 
@@ -98,7 +98,11 @@ Player.prototype.handleInput = function (key) {
                 winBlock.classList.remove('active');
             }, 1500);
         }
-    } else if (key === 'down' && this.y < configuration.field.BOTTOM_BORDER) {
+    } else if (
+        key === 'down' &&
+        this.y < configuration.field.BOTTOM_BORDER &&
+        this.y !== configuration.player.FINISH_ROW
+    ) {
         this.y += configuration.player.STEP_Y;
     }
 };
