@@ -72,7 +72,10 @@ Enemy.prototype.checkCollisions = function () {
 
 // Setting initial position of a player
 function Player(x, y) {
-    (this.x = x), (this.y = y), (this.sprite = 'images/char-boy.png');
+    (this.x = x),
+        (this.y = y),
+        (this.sprite = 'images/char-boy.png'),
+        (this.level = 0);
 }
 
 Player.prototype.update = function () {};
@@ -110,17 +113,25 @@ Player.prototype.handleInput = function (key) {
 
 Player.prototype.handleSwipeInput = function () {
     let startX, startY, moveX, moveY;
-    document.addEventListener('touchstart', function (event) {
-        startX = event.touches[0].clientX;
-        startY = event.touches[0].clientY;
-        console.log(startX, startY);
-    });
+    document.addEventListener(
+        'touchstart',
+        function (event) {
+            event.preventDefault();
+            startX = event.touches[0].clientX;
+            startY = event.touches[0].clientY;
+        },
+        { passive: false }
+    );
 
-    document.addEventListener('touchmove', function (event) {
-        event.stopPropagation();
-        moveX = event.touches[0].clientX - startX;
-        moveY = event.touches[0].clientY - startY;
-    });
+    document.addEventListener(
+        'touchmove',
+        function (event) {
+            event.preventDefault();
+            moveX = event.touches[0].clientX - startX;
+            moveY = event.touches[0].clientY - startY;
+        },
+        { passive: false }
+    );
 
     document.addEventListener('touchend', function () {
         if (Math.abs(moveX) > Math.abs(moveY)) {
