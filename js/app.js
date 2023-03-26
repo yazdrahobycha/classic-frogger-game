@@ -29,15 +29,15 @@ const configuration = {
 let level = 0;
 
 // Enemies our player must avoid
-var Enemy = function (x, y) {
+const Enemy = function (x, y) {
     // Variables for starter position/speed
-    (this.x = x),
-        (this.y = y),
-        (this.speed = this.getSpeed(
-            configuration.field.BASE_MIN_SPEED,
-            configuration.field.BASE_MAX_SPEED,
-            level
-        )),
+    this.x = x;
+    this.y = y;
+    (this.speed = this.getSpeed(
+        configuration.field.BASE_MIN_SPEED,
+        configuration.field.BASE_MAX_SPEED,
+        level
+    )),
         (this.sprite = 'images/enemy-bug.png');
 };
 
@@ -81,17 +81,15 @@ Enemy.prototype.checkCollisions = function () {
         player.x + configuration.player.WIDTH > this.x
     ) {
         // Restarts if collision is detected
-        (player.x = configuration.player.START_COL),
-            (player.y = configuration.player.START_ROW);
+        player.x = configuration.player.START_COL;
+        player.y = configuration.player.START_ROW;
         level = 0;
     }
 };
 
 // Setting initial position of a player
 function Player(x, y) {
-    (this.x = x),
-        (this.y = y),
-        (this.sprite = 'images/char-boy.png')
+    (this.x = x), (this.y = y), (this.sprite = 'images/char-boy.png');
 }
 
 Player.prototype.update = function () {};
@@ -111,8 +109,8 @@ Player.prototype.handleInput = function (key) {
         // by displaying the 'win' message, and, after 1500ms reseting players's position
         // and removing the message
         if (this.y === configuration.player.FINISH_ROW) {
-            level++
-            winBlock.innerText = `Level #${level}`
+            level++;
+            winBlock.innerText = `Level #${level}`;
             winBlock.classList.add('active');
             setTimeout(() => {
                 this.x = configuration.player.START_COL;
@@ -129,18 +127,17 @@ Player.prototype.handleInput = function (key) {
     }
 };
 
-
-// function that measures swipes direction and sends appropriate command 
+// function that measures swipes direction and sends appropriate command
 // to .handleInput() function
 Player.prototype.handleSwipeInput = function () {
     let startX, startY, moveX, moveY;
-    document.addEventListener(
-        'touchstart',
-        function (event) {
-            startX = event.touches[0].clientX;
-            startY = event.touches[0].clientY;
-        }
-    );
+    document.addEventListener('touchstart', function (event) {
+        startX = event.touches[0].clientX;
+        startY = event.touches[0].clientY;
+        moveX = 0;
+        moveY = 0;
+        console.log(`startX: ${startX}\nstartY: ${startY}}`);
+    });
 
     document.addEventListener(
         'touchmove',
@@ -154,15 +151,15 @@ Player.prototype.handleSwipeInput = function () {
 
     document.addEventListener('touchend', function () {
         if (Math.abs(moveX) > Math.abs(moveY)) {
-            if (moveX > 50) {
+            if (moveX > 100) {
                 player.handleInput('right');
-            } else if (moveX < -50) {
+            } else if (moveX < -100) {
                 player.handleInput('left');
             }
         } else {
-            if (moveY > 50) {
+            if (moveY > 100) {
                 player.handleInput('down');
-            } else if (moveY < -50) {
+            } else if (moveY < -100) {
                 player.handleInput('up');
             }
         }
@@ -184,8 +181,8 @@ const player = new Player(
     configuration.player.START_ROW
 );
 
-// This listens for key presses and sends the keys to
-// Player.handleInput() method.
+// This listens for key presses, sends the keys to
+// Player.handleInput() method and listens to swipes
 document.addEventListener('keyup', function (e) {
     var allowedKeys = {
         37: 'left',
