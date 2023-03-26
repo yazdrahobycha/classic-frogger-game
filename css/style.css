@@ -1,5 +1,6 @@
 body {
     font-family: 'Courier New', Courier, monospace;
+    font-weight: 600;
     text-align: center;
 }
 
@@ -30,7 +31,7 @@ body {
 }
 
 .score {
-    font-size: 1.5rem;
+    font-size: 2rem;
     margin-bottom: -40px;
     margin-top: 2rem;
 }
