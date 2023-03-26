@@ -86,6 +86,7 @@ Player.prototype.handleInput = function (key) {
         this.x += configuration.player.STEP_X;
     } else if (key === 'up' && this.y > configuration.field.UP_BORDER) {
         this.y -= configuration.player.STEP_Y;
+
         // if, after going up and updating y-position accordingly
         // the y-position is a position of a last tile, ending the game
         // by displaying the 'win' message, and, after 1500ms reseting players's position
@@ -105,6 +106,37 @@ Player.prototype.handleInput = function (key) {
     ) {
         this.y += configuration.player.STEP_Y;
     }
+};
+
+Player.prototype.handleSwipeInput = function () {
+    let startX, startY, moveX, moveY;
+    document.addEventListener('touchstart', function (event) {
+        startX = event.touches[0].clientX;
+        startY = event.touches[0].clientY;
+        console.log(startX, startY);
+    });
+
+    document.addEventListener('touchmove', function (event) {
+        event.stopPropagation();
+        moveX = event.touches[0].clientX - startX;
+        moveY = event.touches[0].clientY - startY;
+    });
+
+    document.addEventListener('touchend', function () {
+        if (Math.abs(moveX) > Math.abs(moveY)) {
+            if (moveX > 0) {
+                player.handleInput('right');
+            } else {
+                player.handleInput('left');
+            }
+        } else {
+            if (moveY > 0) {
+                player.handleInput('down');
+            } else {
+                player.handleInput('up');
+            }
+        }
+    });
 };
 
 Player.prototype.render = function () {
@@ -134,3 +166,4 @@ document.addEventListener('keyup', function (e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
+player.handleSwipeInput();
