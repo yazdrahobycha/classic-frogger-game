@@ -62,7 +62,6 @@ Enemy.prototype.update = function (dt) {
             configuration.field.BASE_MAX_SPEED,
             level
         );
-        console.log(this.speed)
     }
     this.checkCollisions();
 };
@@ -114,6 +113,7 @@ Player.prototype.handleInput = function (key) {
         // and removing the message
         if (this.y === configuration.player.FINISH_ROW) {
             level++
+            winBlock.innerText = `Level #${level}`
             winBlock.classList.add('active');
             setTimeout(() => {
                 this.x = configuration.player.START_COL;
