@@ -21,21 +21,33 @@ const configuration = {
         RIGHT_BORDER: 400,
         UP_BORDER: -25,
         BOTTOM_BORDER: 400,
+        BASE_MIN_SPEED: 100,
+        BASE_MAX_SPEED: 250,
+        SPEED_INCREMENTER: 25,
     },
 };
 
 // Enemies our player must avoid
+let level = 0;
 var Enemy = function (x, y) {
     // Variables for starter position/speed
     (this.x = x),
         (this.y = y),
-        (this.speed = this.getSpeed(200, 400)),
+        (this.speed = this.getSpeed(
+            configuration.field.BASE_MIN_SPEED,
+            configuration.field.BASE_MAX_SPEED,
+            level
+        )),
         (this.sprite = 'images/enemy-bug.png');
 };
 
 // Get random speed
-Enemy.prototype.getSpeed = function (min, max) {
-    return Math.floor(Math.random() * (max - min)) + min;
+Enemy.prototype.getSpeed = function (min, max, playerLevel) {
+    const minByLevel =
+        min + playerLevel * configuration.field.SPEED_INCREMENTER;
+    const maxByLevel =
+        max + playerLevel * configuration.field.SPEED_INCREMENTER;
+    return Math.floor(Math.random() * (maxByLevel - minByLevel)) + minByLevel;
 };
 
 // Update the enemy's position, loop enemy to the initial position when
@@ -45,7 +57,12 @@ Enemy.prototype.update = function (dt) {
     this.x += this.speed * dt;
     if (this.x > configuration.enemy.END) {
         this.x = configuration.enemy.START;
-        this.speed = this.getSpeed(200, 700);
+        this.speed = this.getSpeed(
+            configuration.field.BASE_MIN_SPEED,
+            configuration.field.BASE_MAX_SPEED,
+            level
+        );
+        console.log(this.speed)
     }
     this.checkCollisions();
 };
@@ -67,6 +84,7 @@ Enemy.prototype.checkCollisions = function () {
         // Restarts if collision is detected
         (player.x = configuration.player.START_COL),
             (player.y = configuration.player.START_ROW);
+        level = 0;
     }
 };
 
@@ -95,6 +113,7 @@ Player.prototype.handleInput = function (key) {
         // by displaying the 'win' message, and, after 1500ms reseting players's position
         // and removing the message
         if (this.y === configuration.player.FINISH_ROW) {
+            level++
             winBlock.classList.add('active');
             setTimeout(() => {
                 this.x = configuration.player.START_COL;
