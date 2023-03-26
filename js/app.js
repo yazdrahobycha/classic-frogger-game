@@ -26,9 +26,9 @@ const configuration = {
         SPEED_INCREMENTER: 25,
     },
 };
+let level = 0;
 
 // Enemies our player must avoid
-let level = 0;
 var Enemy = function (x, y) {
     // Variables for starter position/speed
     (this.x = x),
@@ -91,8 +91,7 @@ Enemy.prototype.checkCollisions = function () {
 function Player(x, y) {
     (this.x = x),
         (this.y = y),
-        (this.sprite = 'images/char-boy.png'),
-        (this.level = 0);
+        (this.sprite = 'images/char-boy.png')
 }
 
 Player.prototype.update = function () {};
@@ -130,16 +129,17 @@ Player.prototype.handleInput = function (key) {
     }
 };
 
+
+// function that measures swipes direction and sends appropriate command 
+// to .handleInput() function
 Player.prototype.handleSwipeInput = function () {
     let startX, startY, moveX, moveY;
     document.addEventListener(
         'touchstart',
         function (event) {
-            event.preventDefault();
             startX = event.touches[0].clientX;
             startY = event.touches[0].clientY;
-        },
-        { passive: false }
+        }
     );
 
     document.addEventListener(
@@ -154,15 +154,16 @@ Player.prototype.handleSwipeInput = function () {
 
     document.addEventListener('touchend', function () {
         if (Math.abs(moveX) > Math.abs(moveY)) {
-            if (moveX > 0) {
+            if (moveX > 50) {
+                console.log(moveX)
                 player.handleInput('right');
-            } else {
+            } else if (moveX < -50) {
                 player.handleInput('left');
             }
         } else {
-            if (moveY > 0) {
+            if (moveY > 50) {
                 player.handleInput('down');
-            } else {
+            } else if (moveY < -50) {
                 player.handleInput('up');
             }
         }
