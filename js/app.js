@@ -26,7 +26,10 @@ const configuration = {
         SPEED_INCREMENTER: 25,
     },
 };
+const popUp = document.querySelector('.pop_up');
+const scoreContainer = document.querySelector('.score');
 let level = 0;
+let maxLevel = 0;
 
 // Enemies our player must avoid
 const Enemy = function (x, y) {
@@ -72,7 +75,7 @@ Enemy.prototype.render = function () {
 };
 
 //Check for collision, adding width and height to the player and enemies and
-// cheking for the intersection between them
+// cheking for the intersection between them, show the 'lose' message
 Enemy.prototype.checkCollisions = function () {
     if (
         player.y < this.y + configuration.enemy.HEIGHT &&
@@ -80,10 +83,18 @@ Enemy.prototype.checkCollisions = function () {
         player.x < this.x + configuration.enemy.WIDTH &&
         player.x + configuration.player.WIDTH > this.x
     ) {
-        // Restarts if collision is detected
+        if (level > maxLevel) {
+            maxLevel = level;
+        }
+        scoreContainer.innerText = `Current level:0  Max level:${maxLevel}`;
+        level = 0;
+        popUp.innerText = `You lose`;
+        popUp.classList.add('lose');
         player.x = configuration.player.START_COL;
         player.y = configuration.player.START_ROW;
-        level = 0;
+        setTimeout(() => {
+            popUp.classList.remove('lose');
+        }, 1500);
     }
 };
 
@@ -95,7 +106,6 @@ function Player(x, y) {
 Player.prototype.update = function () {};
 
 // Updating the player position based on a key event
-const winBlock = document.querySelector('.win');
 Player.prototype.handleInput = function (key) {
     if (key === 'left' && this.x > configuration.field.LEFT_BORDER) {
         this.x -= configuration.player.STEP_X;
@@ -110,12 +120,13 @@ Player.prototype.handleInput = function (key) {
         // and removing the message
         if (this.y === configuration.player.FINISH_ROW) {
             level++;
-            winBlock.innerText = `Level #${level}`;
-            winBlock.classList.add('active');
+            scoreContainer.innerText = `Current level:${level}  Max level:${maxLevel}`;
+            popUp.innerText = `Level #${level}`;
+            popUp.classList.add('win');
             setTimeout(() => {
                 this.x = configuration.player.START_COL;
                 this.y = configuration.player.START_ROW;
-                winBlock.classList.remove('active');
+                popUp.classList.remove('win');
             }, 1500);
         }
     } else if (
