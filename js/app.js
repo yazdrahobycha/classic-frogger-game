@@ -155,7 +155,6 @@ Player.prototype.handleSwipeInput = function () {
     document.addEventListener('touchend', function () {
         if (Math.abs(moveX) > Math.abs(moveY)) {
             if (moveX > 50) {
-                console.log(moveX)
                 player.handleInput('right');
             } else if (moveX < -50) {
                 player.handleInput('left');
